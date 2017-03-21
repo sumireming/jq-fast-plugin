@@ -5,14 +5,143 @@
   <title>插件演示</title>
   <link rel="stylesheet" type="text/css" href="bootstrap-theme/bootstrap.min.css" />
 </head>
+<style type="text/css">
+	
+    #tree li.list-group-item .btn {margin: 0px 3px;}
+    #tree .rename-input {display: none; height: 28px; min-width: 48px;}
+    #tree .rename-input.show-input {display: inline-block;}
+    #tree .order-icon {margin-left: 4px; opacity: 0.4;}
+    #tree .order-icon:hover {opacity: 1;}
+    #tree .drag-icon {float: right; opacity: 0.4;}
+    #tree .drag-icon:hover {opacity: 1;}
+    #tree .list-group-item.bg-info {background-color: #d9edf7; }
+    #tree .list-group-item.bg-success {background-color: #dff0d8; }
+    #tree .list-group-item.bg-primary {background-color: #428bca; }
+
+
+
+</style>
 <body>
-	<div class="container-fluid">
-		<h1 class="page-header">Tree（可编辑树）</h1>
+	<div class="page-wrapper">
+		<div class="container-fluid">
+			<h1 class="page-header">Tree（可编辑树）</h1>
+			<div>
+				<ul id="tree" class="list-group tree-part" section-name="tree"></ul>
+	            <script type="text/html" id="tpl-tree">
+	                <<each tree as value i>>
+	                    <li class="list-group-item <<if tree[i].nodes>>parent-node<</if>>" level="<<level>>" mid="<<tree[i].mid>>" nodeid="<<if parentNodeid>><<parentNodeid>>-<</if>><<i>>" <<if level != 0>>style="padding-left: <<level * 32>>px"<</if>>>
+	                    <<if tree[i].name>>
+	                    <<if tree[i].nodes && tree[i].nodes.length > 0>>
+	                        <i class="icon glyphicon glyphicon-plus" nodeid="<<if parentNodeid>><<parentNodeid>>-<</if>><<i>>"></i>
+	                    <<else>>
+	                        <i class="icon glyphicon"></i>
+	                    <</if>>
+	                    <span class="list-group-name"> <<tree[i].name>> </span>
+	                    <input type="text" class="form-control rename-input " name="name" value="<<tree[i].name>>" />
+	                    <<if !tree[i].nodes >> <span class="small text-muted">[模块id：<<tree[i].mid>>]</span> <</if>>
+	                    <button class="btn btn-xs btn-primary" action="add">添加</button>
+	                    <button class="btn btn-xs btn-danger" action="delete">删除</button>
+	                    <<if !tree[i].nodes >>
+	                    <button class="btn btn-xs btn-info" action="copy">复制</button>
+	                    <</if>>
+	                    <<if !tree[i].nodes || tree[i].nodes.length == 0 >>
+	                    <button class="btn btn-xs btn-link" action="edit">编辑页面</button>
+	                    <</if>>
+	                    <i class="icon order-icon glyphicon glyphicon-circle-arrow-up" type="up"></i>
+	                    <i class="icon order-icon glyphicon glyphicon-circle-arrow-down" type="down"></i>
+	                    <<else>>
+	                    <div class="form-inline">
+	                        <input type="text" class="form-control" name="name" placeholder="请输入模块名" >
+	                        <<if level == 2 && app_list>>
+	                        <select class="form-control" name="appid">
+	                            <option value="">不关联游戏</option>
+	                            <<each app_list as value i>>
+	                            <option value="<<i>>"> <<app_list[i]>></option>
+	                            <</each>>
+	                        </select>
+	                        <</if>>
+	                        <button class="btn btn-xs btn-primary" action="save">保存</button>
+	                        <button class="btn btn-xs btn-default" action="cancel">取消</button>
+	                    </div>
+	                    <</if>>
+	                    <<if level > 1>>
+	                    <i class="icon drag-icon glyphicon glyphicon-list"></i>
+	                    <</if>>
+	                    </li>
+	                <</each>>
+	                <<if level == 1 >>
+	                    <button class="btn btn-sm btn-primary" action="addparent" style="margin: 16px 5px;">添加</button>
+	                <</if>>
+	            </script>
+			</div>
+
+
+			<h1 class="page-header">Editable List（可编辑列表）</h1>
+			<div>
+				
+			</div>
+		</div>
 	</div>
+
 
 
 
 </body>
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
 <script type="text/javascript" src="bootstrap-theme/bootstrap.min.js" ></script>
+<script type="text/javascript" src="lib/arttemplate.js" ></script>
+<script type="text/javascript" src="lib/jq-plugin.js" ></script>
+<script type="text/javascript">
+	new $.tree({
+		wrap : $('#tree'),
+		data : {
+			tree : [
+				{
+					mid : '1',
+					name : '运营数据',
+					nodes : [
+						{
+							mid : '1-1',
+							name : '实时',
+							nodes : [
+								{
+									mid : '1-1-1',
+									name : '实时数据'
+								},
+								{
+									mid : '1-1-2',
+									name : '分时数据'
+								}
+							]
+						},
+						{
+							mid : '1-2',
+							name : '用户'
+						},
+						{
+							mid : '1-2',
+							name : '收入'
+						},
+						{
+							mid : '1-3',
+							name : '报表'
+						}
+					]
+				},
+				{
+					mid : '2',
+					name : '广告统计'
+				},
+				{
+					mid : '3',
+					name : 'sdk功能统计'
+				},
+			]
+		}
+
+	});
+
+
+
+</script>
 </html>
